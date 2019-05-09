@@ -22,7 +22,7 @@ $(function () {
             // if(scrollPosition+(scrollPosition/3)>docHeight){
 
             //從底部開始計算，如果物件已經過了可視範圍底部，即顯現
-            if (scrollPosition-(scrollPosition/19) > animation_this.offset().top) {
+            if (scrollPosition+200 > animation_this.offset().top) {
                 animation_this.css("animation-play-state", "running");
             };
         });
