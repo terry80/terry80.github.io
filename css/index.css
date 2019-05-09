@@ -1,0 +1,364 @@
+﻿
+@import url(http://fonts.googleapis.com/earlyaccess/notosanstc.css);
+ 
+*{
+        box-sizing: border-box;
+    }
+    body , html{
+    font-family: Arial,'Noto Sans TC','微軟正黑體';
+    width: 100%;
+    background-color: #f8f8f8;
+    color: #585858
+}
+@media screen and (max-width: 1280px) {
+/* body{
+    max-width:96% ;
+    margin: 0 auto;
+} */
+}
+@media screen and (max-width: 768px) {
+/* body{
+    max-width:90% ;
+} */
+}
+hr{
+    height:1px;
+    border:none;
+    border-top:1px solid #fff;
+    border-bottom:1px solid #e4e0e0;
+    margin: 55px;
+}
+header{
+    /*padding-top: 20px;
+    padding-left: 10PX;
+    padding-right: 10px;
+    height: 145px;
+    width: 220px;
+    margin: 10px auto 20px;
+    box-shadow: 3px 3px 20px rgba(0,0,0,0.25);*/
+}
+.animated {
+
+    -webkit-animation-delay: 0.5s;
+
+    animation-delay: 0.5s;
+
+    -webkit-animation-duration: 0.8s;
+
+    animation-duration: 0.8s;
+
+    -webkit-animation-play-state: paused;
+
+    animation-play-state: paused;
+
+}
+p{
+    font-weight: 300;
+}
+.logo {
+    -webkit-transition: opacity .4s ease;
+    -moz-transition: opacity .4s ease;
+    -ms-transition: opacity .4s ease;
+    transition: opacity .4s ease;
+    opacity: 1;
+    font-size: 20px;
+
+}
+.logo span{
+    color: #4fcedf;
+    font-size: 22px;
+
+}
+.logo:hover{
+    opacity: .7;
+}
+.nav a{
+    text-decoration: none;
+    color: #666666;
+    transition: 0.6s all ease;
+}
+.nav a:hover{
+    color: #4fcedf;
+    transition: 0.6s all ease;
+}
+
+
+.wrapper{
+    background: #fbfbfb;
+    /* max-width: 960px; */
+    margin: 16px auto 10px;
+    padding:25px;
+    border-radius: 8px;
+    box-shadow: 1px 1px 10px rgba(0,0,0,0.15);
+    overflow: hidden;
+}
+
+h1{
+    font-size: 27px;
+    font-weight: 500;
+    padding: 10px 0;
+    letter-spacing: 2px;
+    text-align: center;
+    color: #4fcedf;
+}
+ h5{
+    letter-spacing: 1px;
+    text-align: center;
+    color: #b1b1b1;
+    font-size: 10px;;
+}
+.h4title{
+     color: #4fcedf;
+}
+.banner{
+    background: url(../images/03-3.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+.work_box{
+}
+.work_box h2{
+    font-size: 22px;
+    font-weight: 600;
+    padding: 10px 0;
+    letter-spacing: 2px;
+    text-align: center;
+    
+}
+.ex>ul>li{
+    margin-top: 15px;
+}
+.items{
+    padding: 5px 0 20px;
+    font-size: 16px;
+    letter-spacing: 1px;
+    text-align: center;
+}
+.items a{
+    display: inline-block;
+    min-width: 300px;
+    text-align: center;
+    line-height: 160%;
+    padding: 6px 16px;
+    text-decoration: none;
+    color: #666666;
+    transition: 0.3s all ease;
+    border: 1px solid #d4d4d4;
+    /* border-radius: 999em; */
+    margin: 6px 0;
+}
+.items a:hover{
+    color: #fff;
+    background: #4fcedf;
+}
+
+@media screen and (max-width: 860px) {
+.inner{
+    display: block;
+}
+.work_box h2{
+    font-size: 16px;
+}
+.items{
+    padding: 5px 0 10px;
+    font-size: 14px;
+    
+}
+.items a{
+    /* display: block; */
+    min-width: auto;
+    width: 150px;
+    margin: 6px auto;
+    padding: 6px 6px;
+}
+}
+
+.about{
+    line-height: 210%;
+    letter-spacing: 1px;
+    vertical-align: text-top
+}
+.centertext{
+    max-width: 500px;
+    /* text-align: center; */
+    margin: 0 auto;
+}
+
+.img{
+    max-width: 300px;
+    width: 100%;
+}
+.img img{
+    width: 100%;;
+}
+@media screen and (max-width: 660px) {
+.img{
+    max-width: 100%;
+    float: none;
+}
+}
+.listdiv {
+    clear: both;
+    max-width:300px ;
+    padding-top: 20px;
+    /* margin: 0 auto; */
+}
+@media screen and (max-width: 920px) {
+.listdiv {
+    padding-top: 5px;
+}
+}
+.list {
+    padding-left: 0px;
+}
+.list h4 {
+    border-bottom: 1px solid #6f6f6f;
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+}
+.list li {
+    padding: 0px 0px;
+    font-size: 14px;
+    color: #6f6f6f;
+    list-style: none;
+    line-height: 160%;
+}
+.lasthr{
+    margin-bottom: 0px;
+}
+footer {
+    width: 100%;
+    padding: 10px 0 10px;
+    margin: 0px;
+}
+.footer {
+    
+    width: 100%;
+    margin: 0px auto;
+    clear: both;
+    text-align: center;
+}
+.footer span {
+    padding: 0px 6px;
+    font-size: 0.7em;
+    color: #b1b1b1;
+    list-style: none;
+}
+@media screen and (max-width: 500px) {
+.footer span {
+    display: block;
+    line-height: 150%;
+}
+}
+
+figure.hovereffect {
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  /* margin: 10px;
+  min-width: 220px;
+  max-width: 310px;
+  max-height: 220px; */
+  width: 100%;
+  background-color: #000;
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 45px;
+}
+figure.hovereffect * {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-transition: all 0.6s ease;
+  transition: all 0.6s ease;
+}
+figure.hovereffect img {
+  opacity: 1;
+  max-width: 100%;
+}
+figure.hovereffect:after {
+  background: #000000;
+  width: 0;
+  height: 6px;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  content: '';
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+figure.hovereffect figcaption {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  padding: 0 30px;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+figure.hovereffect h2,
+figure.hovereffect span {
+  margin: 0;
+  width: 100%;
+}
+figure.hovereffect h2 {
+  opacity: 0;
+  font-size: 1.4em;
+  font-weight: normal;
+  -webkit-transition: all 0.4s ease-in;
+  transition: all 0.4s ease-in;
+}
+figure.hovereffect span {
+  color: #e6e6e6;
+  font-weight: 600;
+  text-transform: uppercase;
+  opacity: 0;
+}
+figure.hovereffect a {
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  position: absolute;
+  z-index: 1;
+}
+figure.hovereffect:after {
+  background-color: #4fcedf;
+}
+
+
+
+figure.hovereffect:hover img,
+figure.hovereffect.hover img {
+opacity: .6;
+  -webkit-transform: scale(1.2);
+  transform: scale(1.2);
+}
+figure.hovereffect:hover:after,
+figure.hovereffect.hover:after {
+  width: 100%;
+}
+figure.hovereffect:hover h2 {
+    opacity: 1;
+  letter-spacing: 0.2em
+}
+figure.hovereffect:hover span {
+    opacity: 1;
+  color: #4fcedf;
+}
+@media screen and (max-width: 1080px) {
+figure.hovereffect h2,
+figure.hovereffect span {
+  opacity: 1;
+}
+figure.hovereffect img{
+    opacity: .6;
+}
+
+}
+
+
+
+
+
+
