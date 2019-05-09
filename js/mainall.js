@@ -7,7 +7,7 @@ $(window).on('load', function () {
 
 
 $(function () {
-
+   
     $(window).scroll(function () {
         var windowHeight = $(window).height(); //視窗高
         var windowWidth = $(window).width(); //視窗高
@@ -30,13 +30,4 @@ $(function () {
 
     }).scroll();
 
-    $(".fixed_btn .top_btn").click(function () {
-        var scrollTop = $(window).scrollTop() //現在高
-        var needTime = scrollTop / 10 + 300;
-
-        $("html,body").stop();
-        $("html,body").animate({
-            scrollTop: 0
-        }, needTime)
-    });
 });
