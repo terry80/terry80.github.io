@@ -10,32 +10,12 @@
     background-color: #f8f8f8;
     color: #585858
 }
-@media screen and (max-width: 1280px) {
-/* body{
-    max-width:96% ;
-    margin: 0 auto;
-} */
-}
-@media screen and (max-width: 768px) {
-/* body{
-    max-width:90% ;
-} */
-}
 hr{
     height:1px;
     border:none;
     border-top:1px solid #fff;
     border-bottom:1px solid #e4e0e0;
-    margin: 55px;
-}
-header{
-    /*padding-top: 20px;
-    padding-left: 10PX;
-    padding-right: 10px;
-    height: 145px;
-    width: 220px;
-    margin: 10px auto 20px;
-    box-shadow: 3px 3px 20px rgba(0,0,0,0.25);*/
+    margin: 30px;
 }
 .animated {
 
@@ -65,7 +45,7 @@ p{
 
 }
 .logo span{
-    color: #4fcedf;
+    color: #92cdd5;
     font-size: 22px;
 
 }
@@ -78,7 +58,7 @@ p{
     transition: 0.6s all ease;
 }
 .nav a:hover{
-    color: #4fcedf;
+    color: #92cdd5;
     transition: 0.6s all ease;
 }
 
@@ -86,11 +66,19 @@ p{
 .wrapper{
     background: #fbfbfb;
     /* max-width: 960px; */
-    margin: 16px auto 10px;
-    padding:25px;
+    margin: 20px auto 0px;
+    padding:30px;
+    padding-bottom: 5px;
     border-radius: 8px;
     box-shadow: 1px 1px 10px rgba(0,0,0,0.15);
     overflow: hidden;
+}
+@media screen and (max-width: 768px) {
+    .wrapper {
+    padding-left:10px;
+    padding-right: 10px;
+    
+    }
 }
 
 h1{
@@ -99,7 +87,7 @@ h1{
     padding: 10px 0;
     letter-spacing: 2px;
     text-align: center;
-    color: #4fcedf;
+    color: #92cdd5;
 }
  h5{
     letter-spacing: 1px;
@@ -108,15 +96,14 @@ h1{
     font-size: 10px;;
 }
 .h4title{
-     color: #4fcedf;
+     color: #92cdd5;
 }
 .banner{
     background: url(../images/03-3.jpg);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
-}
-.work_box{
+    border-radius: 0;
 }
 .work_box h2{
     font-size: 22px;
@@ -150,7 +137,7 @@ h1{
 }
 .items a:hover{
     color: #fff;
-    background: #4fcedf;
+    background: #92cdd5;
 }
 
 @media screen and (max-width: 860px) {
@@ -256,15 +243,11 @@ figure.hovereffect {
   color: #fff;
   position: relative;
   overflow: hidden;
-  /* margin: 10px;
-  min-width: 220px;
-  max-width: 310px;
-  max-height: 220px; */
   width: 100%;
   background-color: #000;
   color: #ffffff;
   text-align: center;
-  margin-bottom: 45px;
+  margin-bottom: 30px;
 }
 figure.hovereffect * {
   -webkit-box-sizing: border-box;
@@ -323,8 +306,9 @@ figure.hovereffect a {
   z-index: 1;
 }
 figure.hovereffect:after {
-  background-color: #4fcedf;
+  background-color: #92cdd5;
 }
+
 
 
 
@@ -344,7 +328,7 @@ figure.hovereffect:hover h2 {
 }
 figure.hovereffect:hover span {
     opacity: 1;
-  color: #4fcedf;
+  color: #92cdd5;
 }
 @media screen and (max-width: 1080px) {
 figure.hovereffect h2,
@@ -356,9 +340,31 @@ figure.hovereffect img{
 }
 
 }
+ul{
+    padding-left: 1.3rem;
+}
+small{
+    color: rgb(128, 147, 159);
+}
+.ls{
+    line-height: 1.6;
+    letter-spacing: 0.1rem;
+}
+@media screen and (max-width: 768px) {
+.img_wrap{
+    margin-left: auto;
+    margin-right: auto;
+}
+}
+a.link{
+    color: #FFF;
+    font-style: italic;
+    font-weight: 600;
+    letter-spacing: 0.11rem;
+}
 
-
-
-
-
-
+@media screen and (max-width: 768px) {
+    figure.hovereffect h2 {
+        font-size: 1.1em;
+    }
+}
