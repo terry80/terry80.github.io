@@ -24,7 +24,8 @@
                 <div class="mb-3">
                     <div class="row mb-2">
                         <div class="col-12">
-                            <textarea name="" id="" cols="30" rows="1" v-model="pasteBoard" @change="pasted"></textarea>
+                            <label class="form-label">貼上點位訊息</label>
+                            <textarea class="form-control" id="" cols="30" rows="1" v-model="pasteBoard" @change="pasted"></textarea>
                         </div>
                     </div>
                     <div class="row">
@@ -256,9 +257,11 @@
 
 
                     return `
-                    <h5 class="text-danger">此單最多止損: ${lossAll} u</h5>
-                    <h5 class="text-success">此單第一止盈: ${roundToTwo(fp1 + fp2 + fp3 + fp4 + fp5 + fp6)} u</h5>
-                    <span>${rate}</span>
+                    <div class="d-flex">
+                        <h5 class="text-danger">此單最多止損: ${lossAll} u </h5>
+                        <h5 class="text-success ms-3"> 此單第一止盈: ${roundToTwo(fp1 + fp2 + fp3 + fp4 + fp5 + fp6)} u</h5>
+                    </div>
+                    
                     <ul class="mb-3">
                         <li class="mb-2">
                             <div>
