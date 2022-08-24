@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Long Shrot</title>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.0/css/bootstrap.min.css'
+        integrity='sha512-XWTTruHZEYJsxV3W/lSXG1n3Q39YIWOstqvmFsdNEEQfHoZ6vm6E9GK2OrF6DSJSpIbRbi+Nn0WDPID9O7xB2Q=='
+        crossorigin='anonymous' />
+    <style>
+        .fz-little{
+            font-size: 11px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-3" id="app">
+        <div class="row">
+            <div class="col-12 col-md-6 offset-md-3">
+                <h3 class="mb-3">{{ strategy }}</h3>
+                <div class="mb-3">
+                    <div class="row mb-2">
+                        <div class="col-12">
+                            <textarea name="" id="" cols="30" rows="1" v-model="pasteBoard" @change="pasted"></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <label class="form-label">方向</label>
+                            <select id="way" class="form-select" v-model="strategy">
+                                <option value="Long">多</option>
+                                <option value="Short">空</option>
+                            </select>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label class="form-label">開倉金額(三個倉位加總) : {{ oneHand }} u</label>
+                            <input type="range" class="form-range" min="10" max="300" step="5" v-model="oneHand">
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label class="form-label">槓桿(x): {{ lever }}倍</label>
+                            <input type="range" class="form-range" min="1" max="125" step="1" v-model="lever">
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label class="form-label">分批建倉點數間隔: {{ pips }}</label>
+                            <input type="range" class="form-range" min="10" max="1000" step="10" v-model="pips">
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="row">
+                        <div class="col-6 text-primary">
+                            <label class="form-label">開倉</label>
+                            <input type="text" class="form-control" v-model.number.trim="firstPoint">
+                        </div>
+                        <div class="col-6 text-secondary">
+                            <label class="form-label">補倉</label>
+                            <input type="text" class="form-control" v-model.number.trim="lastPoint">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="mb-3">
+                    <div class="row">
+                        <div class="col-6 mb-3 text-danger">
+                            <label class="form-label">止損</label>
+                            <input type="text" class="form-control" v-model.number.trim="stopLoss">
+                        </div>
+                        <div class="col-6 mb-3 text-success">
+                        <label class="form-label">第一止盈</label>
+                        <input type="text" class="form-control" v-model.number.trim="stopProfit">
+                        </div>
+                        <!-- <div class="col-6 mb-3 text-success">
+                        <label class="form-label">第二止盈</label>
+                        <input type="text" class="form-control" v-model.number.trim="stopProfit2">
+                        </div>
+                        <div class="col-6 mb-3 text-success">
+                        <label class="form-label">第三止盈</label>
+                        <input type="text" class="form-control" v-model.number.trim="stopProfit3">
+                        </div> -->
+                    </div>
+                    
+                </div>
+                <div class="mb-3" v-html="calcTakePosition" v-if="firstPoint && stopProfit">
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'
+        integrity='sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=='
+        crossorigin='anonymous'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.37/vue.global.min.js'
+        integrity='sha512-rCO3ZZnxh9j/Y725Iq2Cqr2lc9fi83zVeN3PFTUosktylZsCFjD13PDbKrzKjKO/idjM4KlMQC52AsoGFTAe6A=='
+        crossorigin='anonymous'></script>
+    <script>
+        const { ref, reactive, computed } = Vue;
+        const App = {
+            setup() {
+                
+                const pasteBoard = ref('')
+                const strategy = ref('Long')
+                const firstPoint = ref()
+                const lastPoint = ref()
+                const oneHand = ref(50)
+                const lever = ref(40)
+                const pips = ref(50)
+                const stopLoss = ref()
+                const stopProfit = ref()
+                const stopProfit2 = ref()
+                const stopProfit3 = ref()
+                const firstPointPosition = reactive([]);
+                const lastPointPosition = reactive([]);
+                const roundToTwo= (num)=>{
+                    return +(Math.round(num + "e+2") + "e-2");
+                }
+                const calcTakePosition = computed(()=>{
+                    let rate = 1.0012
+                    let cost = 0.0006
+                    
+                    if (strategy.value == 'Long') {
+                        firstPointPosition[0] = [firstPoint.value + pips.value, oneHand.value * 0.3]
+                        firstPointPosition[1] = [firstPoint.value, oneHand.value * 0.3]
+                        firstPointPosition[2] = [firstPoint.value - pips.value, oneHand.value * 0.4]
+
+                        
+                    }else{
+                        rate = -0.9988
+                        firstPointPosition[0] = [firstPoint.value - pips.value, oneHand.value * 0.3]
+                        firstPointPosition[1] = [firstPoint.value, oneHand.value * 0.3]
+                        firstPointPosition[2] = [firstPoint.value + pips.value, oneHand.value * 0.4]
+                    }
+
+
+                    let protectLoss = Math.round(firstPointPosition[0][0] * rate)
+                    let fp1cost1 = roundToTwo((firstPointPosition[0][1] * lever.value / firstPointPosition[0][0]) * firstPointPosition[0][0] * cost)
+                    let fp1cost2 = roundToTwo((firstPointPosition[0][1] * lever.value / firstPointPosition[0][0]) * (stopProfit.value) * cost)
+
+                    let protectLoss2 = Math.round((firstPointPosition[0][0] + firstPointPosition[1][0]) / 2 * rate)
+                    let fp2cost1 = roundToTwo((firstPointPosition[1][1] * lever.value / firstPointPosition[1][0]) * firstPointPosition[1][0] * cost)
+                    let fp2cost2 = roundToTwo((firstPointPosition[1][1] * lever.value / firstPointPosition[1][0]) * (stopProfit.value) * cost)
+
+                    let protectLoss3 = Math.round(((firstPointPosition[0][0] * 0.3) + (firstPointPosition[1][0] * 0.3) + (firstPointPosition[2][0] * 0.4)) * rate)
+                    let fp3cost1 = roundToTwo((firstPointPosition[2][1] * lever.value / firstPointPosition[2][0]) * firstPointPosition[2][0] * cost)
+                    let fp3cost2 = roundToTwo((firstPointPosition[2][1] * lever.value / firstPointPosition[2][0]) * (stopProfit.value) * cost)
+
+                    let fp1 ,fp2 , fp3
+                    if (strategy.value == 'Long') {
+                        fp1 = roundToTwo((firstPointPosition[0][1] * lever.value / firstPointPosition[0][0]) * (stopProfit.value - firstPointPosition[0][0]) - (fp1cost1 + fp1cost2))
+                        
+
+                        fp2 = roundToTwo((firstPointPosition[1][1] * lever.value / firstPointPosition[1][0]) * (stopProfit.value - firstPointPosition[1][0]) - (fp2cost1 + fp2cost2))
+
+
+                        fp3 = roundToTwo((firstPointPosition[2][1] * lever.value / firstPointPosition[2][0]) * (stopProfit.value - firstPointPosition[2][0]) - (fp3cost1 + fp3cost2)) 
+                    }else{
+                        fp1 = roundToTwo((firstPointPosition[0][1] * lever.value / firstPointPosition[0][0]) * (firstPointPosition[0][0] -stopProfit.value) - (fp1cost1 + fp1cost2))
+
+
+                        fp2 = roundToTwo((firstPointPosition[1][1] * lever.value / firstPointPosition[1][0]) * (firstPointPosition[1][0] -stopProfit.value  ) - (fp2cost1 + fp2cost2))
+
+
+                        fp3 = roundToTwo((firstPointPosition[2][1] * lever.value / firstPointPosition[2][0]) * (firstPointPosition[2][0] -stopProfit.value ) - (fp3cost1 + fp3cost2)) 
+                    }
+                    
+
+                    // 補倉
+                    if (strategy.value == 'Long') {
+                        lastPointPosition[0] = [lastPoint.value + pips.value, oneHand.value * 0.3]
+                        lastPointPosition[1] = [lastPoint.value, oneHand.value * 0.3]
+                        lastPointPosition[2] = [lastPoint.value - pips.value, oneHand.value * 0.4]
+                    } else {
+                        rate = 0.9988
+                        lastPointPosition[0] = [lastPoint.value - pips.value, oneHand.value * 0.3]
+                        lastPointPosition[1] = [lastPoint.value, oneHand.value * 0.3]
+                        lastPointPosition[2] = [lastPoint.value + pips.value, oneHand.value * 0.4]
+                    }
+
+                    let protectLoss4 = Math.round(lastPointPosition[0][0] * rate)
+                    let fp4cost1 = roundToTwo((lastPointPosition[0][1] * lever.value / lastPointPosition[0][0]) * lastPointPosition[0][0] * cost)
+                    let fp4cost2 = roundToTwo((lastPointPosition[0][1] * lever.value / lastPointPosition[0][0]) * (stopProfit.value) * cost)
+
+                    let protectLoss5 = Math.round((lastPointPosition[0][0] + lastPointPosition[1][0]) / 2 * rate)
+                    let fp5cost1 = roundToTwo((lastPointPosition[1][1] * lever.value / lastPointPosition[1][0]) * lastPointPosition[1][0] * cost)
+                    let fp5cost2 = roundToTwo((lastPointPosition[1][1] * lever.value / lastPointPosition[1][0]) * (stopProfit.value) * cost)
+
+                    let protectLoss6 = Math.round(((lastPointPosition[0][0] * 0.3) + (lastPointPosition[1][0] * 0.3) + (lastPointPosition[2][0] * 0.4)) * rate)
+                    let fp6cost1 = roundToTwo((lastPointPosition[2][1] * lever.value / lastPointPosition[2][0]) * lastPointPosition[2][0] * cost)
+                    let fp6cost2 = roundToTwo((lastPointPosition[2][1] * lever.value / lastPointPosition[2][0]) * (stopProfit.value) * cost)
+
+                    let fp4, fp5, fp6
+                    if (strategy.value == 'Long') {
+                        fp4 = roundToTwo((lastPointPosition[0][1] * lever.value / lastPointPosition[0][0]) * (stopProfit.value - lastPointPosition[0][0]) - (fp4cost1 + fp4cost2))
+
+
+                        fp5 = roundToTwo((lastPointPosition[1][1] * lever.value / lastPointPosition[1][0]) * (stopProfit.value - lastPointPosition[1][0]) - (fp5cost1 + fp5cost2))
+
+
+                        fp6 = roundToTwo((lastPointPosition[2][1] * lever.value / lastPointPosition[2][0]) * (stopProfit.value - lastPointPosition[2][0]) - (fp6cost1 + fp6cost2))
+                    } else {
+                        fp4 = roundToTwo((lastPointPosition[0][1] * lever.value / lastPointPosition[0][0]) * (lastPointPosition[0][0] - stopProfit.value) - (fp4cost1 + fp4cost2))
+
+
+                        fp5 = roundToTwo((lastPointPosition[1][1] * lever.value / lastPointPosition[1][0]) * (lastPointPosition[1][0] - stopProfit.value) - (fp5cost1 + fp5cost2))
+
+
+                        fp6 = roundToTwo((lastPointPosition[2][1] * lever.value / lastPointPosition[2][0]) * (lastPointPosition[2][0] - stopProfit.value) - (fp6cost1 + fp6cost2))
+                    }
+
+
+                    //止損
+                    let lossAllcost = roundToTwo( (fp1cost1 + fp1cost2) + (fp2cost1 + fp2cost2) + (fp3cost1 + fp3cost2) +(fp4cost1 + fp4cost2)+ (fp5cost1 + fp5cost2)+ (fp6cost1 + fp6cost2) )
+                    
+                    let openAllAveragePosition =  roundToTwo(((firstPointPosition[0][0] * 0.3) + (firstPointPosition[1][0] * 0.3) + (firstPointPosition[2][0] * 0.4) + (lastPointPosition[0][0] * 0.3) + (lastPointPosition[1][0] * 0.3) + (lastPointPosition[2][0] * 0.4)) / 2)
+                    let totalLossPoint = (stopLoss.value - openAllAveragePosition )
+                    let totalAmount = 0
+                    firstPointPosition.forEach((o,i) => {
+                        totalAmount += Math.round((o[1] * lever.value / o[0]) * 1000) / 1000
+                    });
+                    lastPointPosition.forEach((o, i) => {
+                        totalAmount += (o[1] * lever.value / o[0])
+                    });
+                    let lossAll = roundToTwo(totalLossPoint* totalAmount - lossAllcost)
+
+
+
+
+                    return `
+                    <h5 class="text-danger">此單最多止損: ${lossAll} u</h5>
+                    <h5 class="text-success">此單最多止盈: ${roundToTwo(fp1 + fp2 + fp3 + fp4 + fp5 + fp6)} u</h5>
+                    
+                    <ul class="mb-3">
+                        <li class="mb-2">
+                            <div>
+                            第一開倉 : <b> ${firstPointPosition[0][0]}</b> 下 <b> ${firstPointPosition[0][1]}</b> u
+                            </div>
+                            <div class="d-flex fz-little">
+                                <div>保護止損 <span class="text-danger"> ${protectLoss} </span> </div>                            
+                                <div> 到第一止盈賺 <span class="text-success"> ${fp1} </span> </div>
+                            </div>
+                        </li>
+                        <li class="mb-2">
+                            <div>
+                            第二開倉  : <b> ${firstPointPosition[1][0]}</b> 下 <b> ${firstPointPosition[1][1]}</b> u <small class="text-black-50">(此時均價${(firstPointPosition[0][0]+ firstPointPosition[1][0])/2})</small>
+                            </div>
+                            <div class="d-flex fz-little">
+                                <div>保護止損 <span class="text-danger">${protectLoss2}</span></div>                          
+                                <div>到第一止盈賺 <span class="text-success">${roundToTwo(fp1 + fp2)}</span></div>
+                            </div>
+                        </li>
+                        <li class="mb-2">
+                            <div>
+                            第三開倉  : <b> ${firstPointPosition[2][0]}</b> 下 <b> ${firstPointPosition[2][1]}</b> u <small class="text-black-50">(此時均價${((firstPointPosition[0][0]*0.3 )+ (firstPointPosition[1][0]*0.3) +(firstPointPosition[2][0] *0.4)) })</small>
+                            </div>
+                            <div class="d-flex fz-little">
+                                <div>保護止損 <span class="text-danger">${protectLoss3}</span></div>                          
+                                <div>到第一止盈賺 <span class="text-success">${roundToTwo(fp1 + fp2 + fp3)}</span></div>
+                            </div>
+                        </li>
+                    </ul>
+
+
+                    <ul class="mb-3">
+                        <li class="mb-2">
+                            <div>
+                            第一補倉 : <b> ${lastPointPosition[0][0]}</b> 下 <b> ${lastPointPosition[0][1]}</b> u <small class="text-black-50">(此時均價${roundToTwo(((firstPointPosition[0][0] * 0.3) + (firstPointPosition[1][0] * 0.3) + (firstPointPosition[2][0] * 0.4) + (lastPointPosition[0][0] * 0.3))/1.3)})</small>
+                            </div>
+                            <div class="d-flex fz-little">
+                                <div>保護止損 <span class="text-danger"> ${protectLoss4} </span> </div>                            
+                                <div> 到第一止盈賺 <span class="text-success">${roundToTwo(fp1 + fp2 + fp3 + fp4)}</span> </div>
+                            </div>
+                        </li>
+                        <li class="mb-2">
+                            <div>
+                            第二補倉  : <b> ${lastPointPosition[1][0]}</b> 下 <b> ${lastPointPosition[1][1]}</b> u <small class="text-black-50">(此時均價${roundToTwo(((firstPointPosition[0][0] * 0.3) + (firstPointPosition[1][0] * 0.3) + (firstPointPosition[2][0] * 0.4) + (lastPointPosition[0][0] * 0.3) + (lastPointPosition[1][0] * 0.3)) / 1.6)})</small>
+                            </div>
+                            <div class="d-flex fz-little">
+                                <div>保護止損 <span class="text-danger">${protectLoss5}</span></div>                          
+                                <div>到第一止盈賺 <span class="text-success">${roundToTwo(fp1 + fp2 + fp3 + fp4 + fp5)}</span></div>
+                            </div>
+                        </li>
+                        <li class="mb-2">
+                            <div>
+                            第三補倉  : <b> ${lastPointPosition[2][0]}</b> 下 <b> ${lastPointPosition[2][1]}</b> u <small class="text-black-50">(此時均價${roundToTwo(((firstPointPosition[0][0] * 0.3) + (firstPointPosition[1][0] * 0.3) + (firstPointPosition[2][0] * 0.4) + (lastPointPosition[0][0] * 0.3) + (lastPointPosition[1][0] * 0.3) + (lastPointPosition[2][0] * 0.4)) / 2)})</small>
+                            </div>
+                            <div class="d-flex fz-little">
+                                <div>保護止損 <span class="text-danger">${protectLoss6}</span></div>                          
+                                <div>到第一止盈賺 <span class="text-success">${roundToTwo(fp1 + fp2 + fp3 + fp4 + fp5 + fp6)}</span></div>
+                            </div>
+                        </li>
+                    </ul>
+
+
+                    `
+                })
+
+                const pasted =()=>{
+                    let str = pasteBoard.value
+                    let ss = str.split("\n")
+                    ss.filter((o,i)=>{
+                        if (o.indexOf('方向：') == 0) {
+                            let arr = o.slice(3)
+                            if (arr == '空') {
+                                strategy.value = 'Short'
+                            }                            
+                        }
+                        if ( o.indexOf('建仓：') == 0 ) {
+                            let arr = o.slice(3)
+                            arr = arr.split("-")
+                            firstPoint.value = arr[0]
+                            lastPoint.value = arr[1]
+                        }
+                        
+                        if (o.indexOf('止损：') == 0) {
+                            let arr = o.substr(3)
+                            stopLoss.value = arr
+                        }
+                        if (o.indexOf('止盈：') == 0) {                            
+                            let arr = o.slice(3)
+                            arr = arr.split("-")
+                            stopProfit.value = arr[0]
+                        }
+                    })
+                }
+                return {
+                    strategy,
+                    firstPoint,
+                    lastPoint,
+                    oneHand,
+                    pips,
+                    lever,
+                    stopLoss,
+                    stopProfit,
+                    stopProfit2,
+                    stopProfit3,
+                    firstPointPosition,
+                    calcTakePosition,
+                    pasteBoard,
+                    pasted
+                };
+            },
+        }
+        Vue.createApp(App).mount("#app")
+    </script>
+</body>
+
+</html>
